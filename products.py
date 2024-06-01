@@ -37,3 +37,38 @@ class Product:
 
     def remove_promotion(self):
         self.promotion = None
+
+
+class NonStockedProduct(Product):
+    def __init__(self, name: str, price: float):
+        super().__init__(name, price, quantity=0)
+
+    def is_active(self) -> bool:
+        return False
+
+    def buy(self, quantity: int) -> float:
+        raise ValueError("This product is not stocked.")
+
+    def show(self):
+        print(f"Product: {self.name}, Price: {self.price}, Quantity: Not Applicable")
+        if self.promotion:
+            print(f"Promotion: {self.promotion.__class__.__name__}")
+
+
+class LimitedProduct(Product):
+    def __init__(self, name: str, price: float, quantity: int, maximum: int):
+        super().__init__(name, price, quantity)
+        self.maximum = maximum
+
+    def is_active(self) -> bool:
+        return self.quantity > 0
+
+    def buy(self, quantity: int) -> float:
+        if quantity > self.maximum:
+            raise ValueError(f"Cannot buy more than {self.maximum} of this product.")
+        return super().buy(quantity)
+
+    def show(self):
+        print(f"Product: {self.name}, Price: {self.price}, Quantity: {self.quantity}, Maximum: {self.maximum}")
+        if self.promotion:
+            print(f"Promotion: {self.promotion.__class__.__name__}")

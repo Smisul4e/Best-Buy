@@ -1,5 +1,6 @@
 from products import Product, NonStockedProduct, LimitedProduct
 
+
 class Store:
     def __init__(self, products: list[Product]):
         self.products = products
