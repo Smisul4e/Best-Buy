@@ -1,5 +1,3 @@
-# test_product.py
-
 import pytest
 from products import Product
 
