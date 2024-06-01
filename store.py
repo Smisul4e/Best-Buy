@@ -1,3 +1,5 @@
+# store.py
+
 from products import Product, NonStockedProduct, LimitedProduct
 
 class Store:
@@ -16,7 +18,9 @@ class Store:
     def buy_product(self, product_name: str, quantity: int):
         for product in self.products:
             if product.name == product_name:
-                return product.buy(quantity)
+                total_price = product.buy(quantity)
+                print(f"Total price for {quantity} {product_name}: ${total_price:.2f}")
+                return total_price
         raise ValueError(f"Product {product_name} not found in store")
 
     def show_products(self):
