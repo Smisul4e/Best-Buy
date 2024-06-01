@@ -1,5 +1,3 @@
-# store.py
-
 from products import Product, NonStockedProduct, LimitedProduct
 
 class Store:

@@ -1,4 +1,4 @@
-# products.py
+from abc import ABC, abstractmethod
 
 class Product:
     def __init__(self, name: str, price: float, quantity: int = 0):
@@ -25,17 +25,22 @@ class Product:
 
     def apply_promotion(self, quantity: int) -> float:
         if self.promotion:
-            return self.promotion.apply(self.price, quantity)
+            return self.promotion.apply_promotion(self, quantity)
         return self.price * quantity
 
     def show(self):
         print(f"Product: {self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        if self.promotion:
+            print(f"Promotion: {self.promotion.name}")
 
     def set_quantity(self, quantity: int):
         self.quantity = quantity
 
     def set_promotion(self, promotion):
         self.promotion = promotion
+
+    def remove_promotion(self):
+        self.promotion = None
 
 
 class Electronics(Product):
@@ -86,29 +91,40 @@ class LimitedProduct(Product):
 
 
 # Promotion Classes
-class Promotion:
-    def apply(self, price: float, quantity: int) -> float:
+class Promotion(ABC):
+    def __init__(self, name: str):
+        self.name = name
+
+    @abstractmethod
+    def apply_promotion(self, product: Product, quantity: int) -> float:
         pass
 
 
 class PercentageDiscount(Promotion):
-    def __init__(self, percent: float):
+    def __init__(self, name: str, percent: float):
+        super().__init__(name)
         self.percent = percent
 
-    def apply(self, price: float, quantity: int) -> float:
-        discount = (self.percent / 100) * price
-        return (price - discount) * quantity
+    def apply_promotion(self, product: Product, quantity: int) -> float:
+        discount = (self.percent / 100) * product.price
+        return (product.price - discount) * quantity
 
 
 class SecondItemHalfPrice(Promotion):
-    def apply(self, price: float, quantity: int) -> float:
+    def __init__(self, name: str):
+        super().__init__(name)
+
+    def apply_promotion(self, product: Product, quantity: int) -> float:
         pairs = quantity // 2
         remainder = quantity % 2
-        return (pairs * (price * 1.5)) + (remainder * price)
+        return (pairs * (product.price * 1.5)) + (remainder * product.price)
 
 
 class BuyTwoGetOneFree(Promotion):
-    def apply(self, price: float, quantity: int) -> float:
+    def __init__(self, name: str):
+        super().__init__(name)
+
+    def apply_promotion(self, product: Product, quantity: int) -> float:
         sets_of_three = quantity // 3
         remainder = quantity % 3
-        return (sets_of_three * 2 * price) + (remainder * price)
+        return (sets_of_three * 2 * product.price) + (remainder * product.price)
