@@ -1,5 +1,12 @@
 class Product:
     def __init__(self, name: str, price: float, quantity: int = 0):
+        if not name:
+            raise ValueError("Name cannot be empty.")
+        if price < 0:
+            raise ValueError("Price cannot be negative.")
+        if quantity < 0:
+            raise ValueError("Quantity cannot be negative.")
+
         self.name = name
         self.price = price
         self.quantity = quantity
@@ -18,7 +25,7 @@ class Product:
             total_price = self.price * quantity
 
         self.quantity -= quantity
-        return total_price
+        return total_price, self.quantity
 
     def show(self):
         print(f"Product: {self.name}, Price: {self.price}, Quantity: {self.quantity}")
