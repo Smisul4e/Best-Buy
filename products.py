@@ -90,7 +90,7 @@ class LimitedProduct(Product):
         print(f"Maximum purchase limit: {self.maximum}")
 
 
-# Promotion Classes
+# Abstract Promotion Class
 class Promotion(ABC):
     def __init__(self, name: str):
         self.name = name
